@@ -11,8 +11,10 @@ const firebaseConfig = {
 admin.initializeApp(firebaseConfig);
 const db = admin.firestore();
 const auth = admin.auth();
+const bucket = admin.storage().bucket();
 
 module.exports = {
   db,
   auth,
+  bucket,
 };

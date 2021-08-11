@@ -1,48 +1,51 @@
 const functions = require("firebase-functions");
 const createProfile = require("./src/createProfile");
+// const createUserStorage = require("./src/createUserStorage");
 
-const {auth, db} = require("./src/admin");
+// const {auth, db} = require("./src/admin");
 
-const doStuffFromTheRequest = async (req, res) => {
-  res.writeHead(200, {
-    "Content-Type": "application/json",
-  });
+// const doStuffFromTheRequest = async (req, res) => {
+//   res.writeHead(200, {
+//     "Content-Type": "application/json",
+//   });
 
-  const data = await db.collection("Users").doc(req.user.uid).get()
+//   const data = await db.collection("Users").doc(req.user.uid).get()
 
-  return res.end(JSON.stringify({
-    code: 200,
-    data: data.data(),
-    message: `Hello ${req.user.displayName || req.user.phoneNumber}`,
-  }));
-};
+//   return res.end(JSON.stringify({
+//     code: 200,
+//     data: data.data(),
+//     message: `Hello ${req.user.displayName || req.user.phoneNumber}`,
+//   }));
+// };
 
-const checkAuth = (req, res) => {
-  if (!req.headers.authorization ||
-  !req.headers.authorization.startsWith("Bearer ")) {
-    res.writeHead(403, {
-      "Content-Type": "application/json",
-    });
+// const checkAuth = (req, res) => {
+//   if (!req.headers.authorization ||
+//   !req.headers.authorization.startsWith("Bearer ")) {
+//     res.writeHead(403, {
+//       "Content-Type": "application/json",
+//     });
 
-    return res.end("Authorization header not present in the request");
-  }
+//     return res.end("Authorization header not present in the request");
+//   }
 
-  auth.verifyIdToken(req.headers.authorization.split("Bearer ")[1])
-      .then((decoded) => {
-        req.user = decoded;
-        return doStuffFromTheRequest(req, res);
-      }).catch((error) => {
-        res.writeHead(403, {
-          "Content-Type": "application/json",
-        });
+//   auth.verifyIdToken(req.headers.authorization.split("Bearer ")[1])
+//       .then((decoded) => {
+//         req.user = decoded;
+//         return doStuffFromTheRequest(req, res);
+//       }).catch((error) => {
+//         res.writeHead(403, {
+//           "Content-Type": "application/json",
+//         });
 
-        return res.end("You are unauthorized to perform this action");
-      });
-};
+//         return res.end("You are unauthorized to perform this action");
+//       });
+// };
 
 module.exports = {
-  authOnCreate: functions.auth.user().onCreate(createProfile),
-  checkAuth: functions.https.onRequest(checkAuth),
+  createProfileOnAuthCreate: functions.auth.user().onCreate(createProfile),
+  // createStorageOnAuthCreate:
+  // functions.auth.user().onCreate(createUserStorage),
+  // checkAuth: functions.https.onRequest(checkAuth),
 };
 
 // admin.initializeApp(firebaseConfig);

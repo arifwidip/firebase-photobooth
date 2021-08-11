@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useMemo } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
@@ -8,7 +8,6 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
-  const [loading, setLoading] = useState(true)
 
   const auth = firebase.auth()
   auth.useEmulator("http://localhost:9099");
@@ -21,7 +20,6 @@ export const AuthProvider = ({ children }) => {
 
         authUser.getIdToken().then((idToken) => {
           setToken(idToken)
-          console.log(idToken)
         })
       } else {
         setIsAuthenticated(false)
@@ -52,8 +50,8 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider value={{
       isAuthenticated,
       user,
-      loading,
       signup,
+      token,
     }}>
       { children }
     </AuthContext.Provider>
